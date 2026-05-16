@@ -12,19 +12,25 @@ class ToDoPage extends StatefulWidget {
 
 class ToDoPageView extends State<ToDoPage> {
   List ToDoList = [];
-  String item="";
+  String item = "";
+  final TextEditingController textFieldController = TextEditingController();
 
-  MyInputOnChange(content){
-    setState(() {
-      // item=ToDoList.add({"Item":content});
-      item=content;
-    });
-  }
-
-  AddItem(){
-    setState(() {
-      ToDoList.add({"item":item});
-    });
+  void AddItem() {
+    if (textFieldController.text.trim().isNotEmpty) {
+      setState(() {
+        item = textFieldController.text.trim();
+        ToDoList.add({"item": item});
+      });
+      textFieldController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please write something!"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -41,9 +47,7 @@ class ToDoPageView extends State<ToDoPage> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      onChanged: (value){
-                        MyInputOnChange(value);
-                      },
+                      controller: textFieldController,
                       decoration: AppInputDecoration("Enter Task"),
                     ),
                   ),
@@ -70,12 +74,18 @@ class ToDoPageView extends State<ToDoPage> {
                     child: SizeBox50(
                       Row(
                         children: [
-                          Expanded(flex: 80, child: Text(ToDoList[index]['item'].toString())),
+                          Expanded(
+                            flex: 80,
+                            child: Text(
+                              "${index + 1}. " +
+                                  ToDoList[index]['item'].toString(),
+                            ),
+                          ),
                           Expanded(
                             flex: 20,
                             child: TextButton(
-                              onPressed: (){},
-                              child: Icon(Icons.delete,color: Colors.red,),
+                              onPressed: () {},
+                              child: Icon(Icons.delete, color: Colors.red),
                             ),
                           ),
                         ],
