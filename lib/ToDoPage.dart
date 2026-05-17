@@ -33,6 +33,19 @@ class ToDoPageView extends State<ToDoPage> {
     }
   }
 
+  DeleteItem(index) {
+    setState(() {
+      ToDoList.removeAt(index);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Item Deleted!"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,15 +89,14 @@ class ToDoPageView extends State<ToDoPage> {
                         children: [
                           Expanded(
                             flex: 80,
-                            child: Text(
-                              "${index + 1}. " +
-                                  ToDoList[index]['item'].toString(),
-                            ),
+                            child: Text("${index + 1}. " + ToDoList[index]['item'].toString(),),
                           ),
                           Expanded(
                             flex: 20,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                DeleteItem(index);
+                              },
                               child: Icon(Icons.delete, color: Colors.red),
                             ),
                           ),
